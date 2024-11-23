@@ -22,6 +22,7 @@ public class SimplePasswordHashEncoder implements PasswordHashEncoder {
 
     @Override
     public String encodeBase64(String password) {
+        LOGGER.trace("encodeBase64");
         if( password == null || password.isEmpty() ) {
             LOGGER.warn("password is null or empty");
             return null;
@@ -30,6 +31,7 @@ public class SimplePasswordHashEncoder implements PasswordHashEncoder {
     }
     @Override
     public String encodeHex(String password) {
+        LOGGER.trace("encodeHex");
         if( password == null || password.isEmpty() ) {
             LOGGER.warn("password is null or empty");
             return null;
@@ -38,6 +40,7 @@ public class SimplePasswordHashEncoder implements PasswordHashEncoder {
     }
 
     protected static byte[] hash(HashFunctionType hashFunction, String input) {
+        LOGGER.trace("hash function=" + hashFunction.name());
         return switch(hashFunction) {
             case SHA_256 -> HashFunctions.sha256(input);
             case SHA_384 -> HashFunctions.sha384(input);
