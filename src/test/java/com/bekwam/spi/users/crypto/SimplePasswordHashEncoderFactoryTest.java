@@ -2,9 +2,6 @@ package com.bekwam.spi.users.crypto;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * Unit test for SHA256PasswordEncoderTest
  *

@@ -107,7 +107,7 @@ public class Config {
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_ROLES_QUERY),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_MIN_SIZE),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_MAX_SIZE),
-                Boolean.valueOf(config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_METRICS_ENABLED)),
+                Boolean.parseBoolean(config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_METRICS_ENABLED)),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_USERNAME_CASE),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_VALIDATION_TIMEOUT),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_DB_VENDOR),

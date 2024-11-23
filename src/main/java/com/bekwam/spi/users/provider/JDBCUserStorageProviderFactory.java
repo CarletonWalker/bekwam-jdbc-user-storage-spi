@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.bekwam.spi.users.config.Constants.PROVIDER_NAME;
@@ -116,7 +117,7 @@ public class JDBCUserStorageProviderFactory
     public void close() {
         // heavy-duty entire object synchronized call but only needed at shutdown
         LOGGER.trace("JDBCUserStorageProviderFactory.close()");
-        dataSources.values().stream().filter( ds -> ds != null ).forEach( AgroalDataSource::close );
+        dataSources.values().stream().filter(Objects::nonNull).forEach( AgroalDataSource::close );
         dataSources.clear();
         lastConfigs.clear();
         componentLocks.clear();

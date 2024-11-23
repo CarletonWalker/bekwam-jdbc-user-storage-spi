@@ -2,8 +2,6 @@ package com.bekwam.spi.users.crypto;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.Base64;
-
 /**
  * Hashes cleartext
  *

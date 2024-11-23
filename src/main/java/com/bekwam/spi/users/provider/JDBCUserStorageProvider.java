@@ -136,10 +136,7 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
         Set<Role> roles = userDAO
                 .findRolesByUsername(ds, rolesSQL, username);
 
-        if( u.isPresent() ) {
-            return UserAndRoles.userModel(session, realmModel, model, u.get(), roles);
-        }
-        return null;
+        return u.map(user -> UserAndRoles.userModel(session, realmModel, model, user, roles)).orElse(null);
     }
 
     @Override
