@@ -1,6 +1,7 @@
 package com.bekwam.spi.users.config;
 
 import com.bekwam.spi.users.crypto.BinaryEncoderType;
+import com.bekwam.spi.users.crypto.HashFunctionType;
 import org.jboss.logging.Logger;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
@@ -106,6 +107,20 @@ public class ConfigMetadataFactory {
                 .label("User Query")
                 .defaultValue(DEFAULT_VALUE_PASSWORD_QUERY)
                 .helpText("SQL select statement that returns a hashed password when given an end user's username")
+                .add();
+
+        builder
+                .property().name(PROVIDER_PROPERTY_HASH_FUNCTION)
+                .type(ProviderConfigProperty.LIST_TYPE)
+                .label("Password Hashing Function")
+                .options(
+                        Arrays
+                                .stream(HashFunctionType.values())
+                                .map(HashFunctionType::name)
+                                .collect(Collectors.toList())
+                )
+                .defaultValue(DEFAULT_HASH_FUNCTION.name())
+                .helpText("Hashing function used on the password column in User Query")
                 .add();
 
         builder

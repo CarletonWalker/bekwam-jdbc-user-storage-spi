@@ -1,6 +1,7 @@
 package com.bekwam.spi.users.config;
 
 import com.bekwam.spi.users.crypto.BinaryEncoderType;
+import com.bekwam.spi.users.crypto.HashFunctionType;
 import com.google.common.base.Preconditions;
 import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
@@ -47,6 +48,8 @@ public class Config {
 
     private final BinaryEncoderType binaryEncoder;
 
+    private final HashFunctionType hashFunction;
+
     public Config(String connectionURL,
                   String username,
                   String password,
@@ -61,7 +64,8 @@ public class Config {
                   String allUsersSQL,
                   String searchUsersSQL,
                   String validationSQL,
-                  String binaryEncoder_s) {
+                  String binaryEncoder_s,
+                  String hashFunction_s) {
         this.connectionURL = connectionURL;
         this.username = username;
         this.password = password;
@@ -84,6 +88,14 @@ public class Config {
             LOGGER.warn("received bad binaryEncoder; defaulting to " + enc.name());
         }
         this.binaryEncoder = enc;
+
+        var hf = HashFunctionType.SHA_256; // handle legacy data
+        try {
+            hf = Enum.valueOf(HashFunctionType.class, hashFunction_s);
+        } catch (NullPointerException | IllegalArgumentException exc) {
+            LOGGER.warn("received bad hashFunction; defaulting to " + hf.name());
+        }
+        this.hashFunction = hf;
     }
 
     public static Config from(ComponentModel config) {
@@ -102,7 +114,8 @@ public class Config {
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_ALL_USERS_QUERY),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_SEARCH_USERS_QUERY),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_VALIDATION_QUERY),
-                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_BINARY_ENCODER)
+                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_BINARY_ENCODER),
+                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_HASH_FUNCTION)
         );
     }
 
@@ -179,16 +192,20 @@ public class Config {
         return binaryEncoder;
     }
 
+    public HashFunctionType getHashFunction() {
+        return hashFunction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Config config = (Config) o;
-        return metricsEnabled == config.metricsEnabled && Objects.equals(connectionURL, config.connectionURL) && Objects.equals(username, config.username) && Objects.equals(password, config.password) && Objects.equals(usersSQL, config.usersSQL) && Objects.equals(rolesSQL, config.rolesSQL) && Objects.equals(minSize, config.minSize) && Objects.equals(maxSize, config.maxSize) && Objects.equals(usernameCase, config.usernameCase) && Objects.equals(validationTimeout, config.validationTimeout) && Objects.equals(dbVendor, config.dbVendor) && Objects.equals(allUsersSQL, config.allUsersSQL) && Objects.equals(searchUsersSQL, config.searchUsersSQL) && Objects.equals(validationSQL, config.validationSQL) && binaryEncoder == config.binaryEncoder;
+        return metricsEnabled == config.metricsEnabled && Objects.equals(connectionURL, config.connectionURL) && Objects.equals(username, config.username) && Objects.equals(password, config.password) && Objects.equals(usersSQL, config.usersSQL) && Objects.equals(rolesSQL, config.rolesSQL) && Objects.equals(minSize, config.minSize) && Objects.equals(maxSize, config.maxSize) && Objects.equals(usernameCase, config.usernameCase) && Objects.equals(validationTimeout, config.validationTimeout) && Objects.equals(dbVendor, config.dbVendor) && Objects.equals(allUsersSQL, config.allUsersSQL) && Objects.equals(searchUsersSQL, config.searchUsersSQL) && Objects.equals(validationSQL, config.validationSQL) && binaryEncoder == config.binaryEncoder && hashFunction == config.hashFunction;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(connectionURL, username, password, usersSQL, rolesSQL, minSize, maxSize, metricsEnabled, usernameCase, validationTimeout, dbVendor, allUsersSQL, searchUsersSQL, validationSQL, binaryEncoder);
+        return Objects.hash(connectionURL, username, password, usersSQL, rolesSQL, minSize, maxSize, metricsEnabled, usernameCase, validationTimeout, dbVendor, allUsersSQL, searchUsersSQL, validationSQL, binaryEncoder, hashFunction);
     }
 
     @Override
@@ -208,6 +225,7 @@ public class Config {
                 ", searchUsersSQL='" + searchUsersSQL + '\'' +
                 ", validationSQL='" + validationSQL + '\'' +
                 ", binaryEncoder=" + binaryEncoder +
+                ", hashFunction=" + hashFunction +
                 '}';
     }
 }

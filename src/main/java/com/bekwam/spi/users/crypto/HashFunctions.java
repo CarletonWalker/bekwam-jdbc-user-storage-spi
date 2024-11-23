@@ -17,4 +17,16 @@ public class HashFunctions {
         }
         return DigestUtils.sha256(clearText.getBytes());
     }
+    public static byte[] sha384(String clearText) {
+        if( clearText == null || clearText.isEmpty()) {
+            throw new IllegalArgumentException("sha384 clearText cannot be null or empty");
+        }
+        return DigestUtils.sha384(clearText.getBytes());
+    }
+    public static byte[] sha512(String clearText) {
+        if( clearText == null || clearText.isEmpty()) {
+            throw new IllegalArgumentException("sha512 clearText cannot be null or empty");
+        }
+        return DigestUtils.sha512(clearText.getBytes());
+    }
 }
