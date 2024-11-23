@@ -7,7 +7,7 @@ package com.bekwam.spi.users.crypto;
  * @author carl
  * @since 1.0
  */
-public interface PasswordEncoder {
+public interface PasswordHashEncoder {
     String encodeBase64(String password);
     String encodeHex(String password);
 }

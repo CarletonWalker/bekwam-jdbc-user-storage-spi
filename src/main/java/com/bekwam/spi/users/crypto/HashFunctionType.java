@@ -7,10 +7,11 @@ package com.bekwam.spi.users.crypto;
  * @author carl
  */
 public enum HashFunctionType {
-
     SHA_256,
-
     SHA_384,
-
-    SHA_512
+    SHA_512,
+    SHA3_224,
+    SHA3_256,
+    SHA3_384,
+    SHA3_512
 }

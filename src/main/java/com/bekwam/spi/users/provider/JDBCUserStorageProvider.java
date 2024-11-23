@@ -2,8 +2,7 @@ package com.bekwam.spi.users.provider;
 
 import com.bekwam.spi.users.crypto.BinaryEncoderType;
 import com.bekwam.spi.users.crypto.HashFunctionType;
-import com.bekwam.spi.users.crypto.PasswordEncoderFactory;
-import com.bekwam.spi.users.crypto.SHA256PasswordEncoder;
+import com.bekwam.spi.users.crypto.SimplePasswordHashEncoder;
 import com.bekwam.spi.users.data.Role;
 import com.bekwam.spi.users.data.User;
 import com.bekwam.spi.users.data.UserAndRoles;
@@ -104,7 +103,8 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
                 var storedPassword = user.password();
                 var enteredPassword = credentialInput.getChallengeResponse();
 
-                var passwordEncoder = PasswordEncoderFactory.create(hashingFunction);
+                var passwordEncoder = new SimplePasswordHashEncoder(hashingFunction);
+
                 // Compute the hash
                 var computedHash = switch(binaryEncoder) {
                     case BASE64 ->  passwordEncoder.encodeBase64(enteredPassword);
