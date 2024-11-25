@@ -26,6 +26,8 @@ public class Constants {
     public final static String PROVIDER_PROPERTY_SEARCH_USERS_QUERY = "select_users_query";
     public final static String PROVIDER_PROPERTY_BINARY_ENCODER = "binary_encoder";
     public final static String PROVIDER_PROPERTY_HASH_FUNCTION = "hash_function";
+    public final static String PROVIDER_PROPERTY_NUM_ITERATIONS = "num_iterations";
+    public final static String PROVIDER_PROPERTY_KEY_LENGTH = "key_length";
 
     public final static String PROVIDER_PROPERTY_VALIDATION_QUERY = "validation_query";
 

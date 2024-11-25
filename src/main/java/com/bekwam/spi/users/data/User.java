@@ -9,15 +9,15 @@ package com.bekwam.spi.users.data;
  * @param email
  *
  */
-public record User(String username, String password, String name, String email) {
-    // overridden so hashed password not exposed in logs by accident
+public record User(String username, String password, String name, String email, String salt) {
+    // override toString so that password isn't exposed
     @Override
     public String toString() {
         return "User{" +
                 "username='" + username + '\'' +
-                ", password not null?='" + (password!=null) + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
 }

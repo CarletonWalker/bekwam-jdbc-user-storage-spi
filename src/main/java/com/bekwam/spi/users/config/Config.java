@@ -50,6 +50,10 @@ public class Config {
 
     private final HashFunctionType hashFunction;
 
+    private final int nIterations;
+
+    private final int keyLength;
+
     public Config(String connectionURL,
                   String username,
                   String password,
@@ -65,7 +69,9 @@ public class Config {
                   String searchUsersSQL,
                   String validationSQL,
                   String binaryEncoder_s,
-                  String hashFunction_s) {
+                  String hashFunction_s,
+                  String nIterations_s,
+                  String keyLength_s) {
         this.connectionURL = connectionURL;
         this.username = username;
         this.password = password;
@@ -96,6 +102,18 @@ public class Config {
             LOGGER.warn("received bad hashFunction; defaulting to " + hf.name());
         }
         this.hashFunction = hf;
+
+        if( nIterations_s != null ) {
+            this.nIterations = Integer.parseInt(nIterations_s);
+        } else {
+            this.nIterations = 0;
+        }
+
+        if ( keyLength_s != null ) {
+            this.keyLength = Integer.parseInt(keyLength_s);
+        } else {
+            this.keyLength = 0;
+        }
     }
 
     public static Config from(ComponentModel config) {
@@ -115,7 +133,9 @@ public class Config {
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_SEARCH_USERS_QUERY),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_VALIDATION_QUERY),
                 config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_BINARY_ENCODER),
-                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_HASH_FUNCTION)
+                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_HASH_FUNCTION),
+                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_NUM_ITERATIONS),
+                config.getConfig().getFirst(Constants.PROVIDER_PROPERTY_KEY_LENGTH)
         );
     }
 
@@ -196,16 +216,24 @@ public class Config {
         return hashFunction;
     }
 
+    public int getnIterations() {
+        return nIterations;
+    }
+
+    public int getKeyLength() {
+        return keyLength;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Config config = (Config) o;
-        return metricsEnabled == config.metricsEnabled && Objects.equals(connectionURL, config.connectionURL) && Objects.equals(username, config.username) && Objects.equals(password, config.password) && Objects.equals(usersSQL, config.usersSQL) && Objects.equals(rolesSQL, config.rolesSQL) && Objects.equals(minSize, config.minSize) && Objects.equals(maxSize, config.maxSize) && Objects.equals(usernameCase, config.usernameCase) && Objects.equals(validationTimeout, config.validationTimeout) && Objects.equals(dbVendor, config.dbVendor) && Objects.equals(allUsersSQL, config.allUsersSQL) && Objects.equals(searchUsersSQL, config.searchUsersSQL) && Objects.equals(validationSQL, config.validationSQL) && binaryEncoder == config.binaryEncoder && hashFunction == config.hashFunction;
+        return metricsEnabled == config.metricsEnabled && nIterations == config.nIterations && keyLength == config.keyLength && Objects.equals(connectionURL, config.connectionURL) && Objects.equals(username, config.username) && Objects.equals(password, config.password) && Objects.equals(usersSQL, config.usersSQL) && Objects.equals(rolesSQL, config.rolesSQL) && Objects.equals(minSize, config.minSize) && Objects.equals(maxSize, config.maxSize) && Objects.equals(usernameCase, config.usernameCase) && Objects.equals(validationTimeout, config.validationTimeout) && Objects.equals(dbVendor, config.dbVendor) && Objects.equals(allUsersSQL, config.allUsersSQL) && Objects.equals(searchUsersSQL, config.searchUsersSQL) && Objects.equals(validationSQL, config.validationSQL) && binaryEncoder == config.binaryEncoder && hashFunction == config.hashFunction;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(connectionURL, username, password, usersSQL, rolesSQL, minSize, maxSize, metricsEnabled, usernameCase, validationTimeout, dbVendor, allUsersSQL, searchUsersSQL, validationSQL, binaryEncoder, hashFunction);
+        return Objects.hash(connectionURL, username, password, usersSQL, rolesSQL, minSize, maxSize, metricsEnabled, usernameCase, validationTimeout, dbVendor, allUsersSQL, searchUsersSQL, validationSQL, binaryEncoder, hashFunction, nIterations, keyLength);
     }
 
     @Override
@@ -226,6 +254,8 @@ public class Config {
                 ", validationSQL='" + validationSQL + '\'' +
                 ", binaryEncoder=" + binaryEncoder +
                 ", hashFunction=" + hashFunction +
+                ", nIterations=" + nIterations +
+                ", keyLength=" + keyLength +
                 '}';
     }
 }

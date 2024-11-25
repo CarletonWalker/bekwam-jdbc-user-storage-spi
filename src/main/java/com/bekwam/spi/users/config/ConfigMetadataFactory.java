@@ -110,34 +110,6 @@ public class ConfigMetadataFactory {
                 .add();
 
         builder
-                .property().name(PROVIDER_PROPERTY_HASH_FUNCTION)
-                .type(ProviderConfigProperty.LIST_TYPE)
-                .label("Password Hashing Function")
-                .options(
-                        Arrays
-                                .stream(HashFunctionType.values())
-                                .map(HashFunctionType::name)
-                                .collect(Collectors.toList())
-                )
-                .defaultValue(DEFAULT_HASH_FUNCTION.name())
-                .helpText("Hashing function used on the password column in User Query")
-                .add();
-
-        builder
-                .property().name(PROVIDER_PROPERTY_BINARY_ENCODER)
-                .type(ProviderConfigProperty.LIST_TYPE)
-                .label("Password Binary Encoder")
-                .options(
-                        Arrays
-                                .stream(BinaryEncoderType.values())
-                                .map(BinaryEncoderType::name)
-                                .collect(Collectors.toList())
-                )
-                .defaultValue(DEFAULT_BINARY_ENCODER.name())
-                .helpText("Binary encoding used on the hashed password column in User Query")
-                .add();
-
-        builder
                 .property().name(Constants.PROVIDER_PROPERTY_ROLES_QUERY)
                 .type(ProviderConfigProperty.STRING_TYPE)
                 .label("Roles Query")
@@ -167,6 +139,50 @@ public class ConfigMetadataFactory {
                 .label("Validation Query")
                 .defaultValue(DEFAULT_VALUE_VALIDATION_QUERY)
                 .helpText("SQL select statement called when validating a connection")
+                .add();
+
+        builder
+                .property().name(PROVIDER_PROPERTY_HASH_FUNCTION)
+                .type(ProviderConfigProperty.LIST_TYPE)
+                .label("Password Hashing Function")
+                .options(
+                        Arrays
+                                .stream(HashFunctionType.values())
+                                .map(HashFunctionType::name)
+                                .collect(Collectors.toList())
+                )
+                .defaultValue(DEFAULT_HASH_FUNCTION.name())
+                .helpText("Hashing function used on the password column in User Query")
+                .add();
+
+        builder
+                .property().name(PROVIDER_PROPERTY_BINARY_ENCODER)
+                .type(ProviderConfigProperty.LIST_TYPE)
+                .label("Password Binary Encoder")
+                .options(
+                        Arrays
+                                .stream(BinaryEncoderType.values())
+                                .map(BinaryEncoderType::name)
+                                .collect(Collectors.toList())
+                )
+                .defaultValue(DEFAULT_BINARY_ENCODER.name())
+                .helpText("Binary encoding used on the hashed password column in User Query")
+                .add();
+
+        builder
+                .property().name(PROVIDER_PROPERTY_NUM_ITERATIONS)
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .label("Number of Iterations")
+                .required(false)
+                .helpText("Number of iterations of hashing algorithm (For salted hashes only)")
+                .add();
+
+        builder
+                .property().name(PROVIDER_PROPERTY_KEY_LENGTH)
+                .type(ProviderConfigProperty.STRING_TYPE)
+                .label("Key Length")
+                .required(false)
+                .helpText("Length of key from hashing algorithm (For salted hashes only)")
                 .add();
 
         return builder.build();

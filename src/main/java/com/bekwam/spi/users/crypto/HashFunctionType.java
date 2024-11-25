@@ -13,5 +13,9 @@ public enum HashFunctionType {
     SHA3_224,
     SHA3_256,
     SHA3_384,
-    SHA3_512
+    SHA3_512,
+    PBKDF2WithHmacSHA224,
+    PBKDF2WithHmacSHA256,
+    PBKDF2WithHmacSHA384,
+    PBKDF2WithHmacSHA512
 }

@@ -49,6 +49,7 @@ public class SimplePasswordHashEncoder implements PasswordHashEncoder {
             case SHA3_256 -> HashFunctions.sha3_256(input);
             case SHA3_384 -> HashFunctions.sha3_384(input);
             case SHA3_512 -> HashFunctions.sha3_512(input);
+            default -> throw new UnsupportedOperationException(hashFunction.name());
         };
     }
 }

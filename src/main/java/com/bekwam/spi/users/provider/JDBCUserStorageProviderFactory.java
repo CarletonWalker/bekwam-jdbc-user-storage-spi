@@ -79,7 +79,9 @@ public class JDBCUserStorageProviderFactory
                                 config.getSearchUsersSQL()
                         ),
                         config.getBinaryEncoder(),
-                        config.getHashFunction()
+                        config.getHashFunction(),
+                        config.getnIterations(),
+                        config.getKeyLength()
                 );
             } else {
                 LOGGER.warn("ds not healthy (is it initializing?)");

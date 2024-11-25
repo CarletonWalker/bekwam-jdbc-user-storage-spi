@@ -14,6 +14,7 @@ import java.util.Set;
 public interface UserDAO {
 
     Optional<User> findUserByUsername(DataSource ds, String sql, String username);
+    Optional<User> findUserByUsernameWithSalt(DataSource ds, String sql, String username);
 
     Set<Role> findRolesByUsername(DataSource ds, String sql, String usrCode);
 

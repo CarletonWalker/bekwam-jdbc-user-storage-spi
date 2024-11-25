@@ -2,6 +2,7 @@ package com.bekwam.spi.users.provider;
 
 import com.bekwam.spi.users.crypto.BinaryEncoderType;
 import com.bekwam.spi.users.crypto.HashFunctionType;
+import com.bekwam.spi.users.crypto.PasswordHashEncoderFactory;
 import com.bekwam.spi.users.crypto.SimplePasswordHashEncoder;
 import com.bekwam.spi.users.data.Role;
 import com.bekwam.spi.users.data.User;
@@ -51,6 +52,8 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
     private final UserDAO userDAO;
     private final BinaryEncoderType binaryEncoder;
     private final HashFunctionType hashingFunction;
+    private final int nIterations;
+    private final int keyLength;
 
     public JDBCUserStorageProvider(
             KeycloakSession session,
@@ -60,7 +63,9 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
             String rolesSQL,
             UserDAO userDAO,
             BinaryEncoderType binaryEncoder,
-            HashFunctionType hashingFunction) {
+            HashFunctionType hashingFunction,
+            int nIterations,
+            int keyLength) {
 
         LOGGER.trace("JDBCUserStorageProvider constructor");
 
@@ -72,6 +77,8 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
         this.userDAO = userDAO;
         this.binaryEncoder = binaryEncoder;
         this.hashingFunction = hashingFunction;
+        this.nIterations = nIterations;
+        this.keyLength = keyLength;
 
         if( ds != null ) {
             LOGGER.trace( ds.getMetrics());
@@ -103,7 +110,8 @@ public class JDBCUserStorageProvider implements UserStorageProvider,
                 var storedPassword = user.password();
                 var enteredPassword = credentialInput.getChallengeResponse();
 
-                var passwordEncoder = new SimplePasswordHashEncoder(hashingFunction);
+                var passwordEncoder = PasswordHashEncoderFactory
+                        .create(hashingFunction, binaryEncoder, user.salt(), nIterations, keyLength);
 
                 // Compute the hash
                 var computedHash = switch(binaryEncoder) {

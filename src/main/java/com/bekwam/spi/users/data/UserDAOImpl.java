@@ -29,19 +29,38 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Optional<User> findUserByUsername(DataSource ds, String sql, String username) {
-        LOGGER.trace("findUserByUsrCode method has been called with sql= " + sql + "; username=" + username);
+        LOGGER.trace("findUserByUsername method has been called with sql= " + sql + "; username=" + username);
         try (
-                Connection c = ds.getConnection();
-                PreparedStatement preparedStatement = c.prepareStatement(sql)
+                var c = ds.getConnection();
+                var preparedStatement = c.prepareStatement(sql)
         ) {
             preparedStatement.setString(1, username);
-            ResultSet rs = preparedStatement.executeQuery();
+            var rs = preparedStatement.executeQuery();
             if( rs.next() ) {
                 // query must have SELECT username, password_h
-                return Optional.of(new User(rs.getString(1), rs.getString(2), null, null));
+                return Optional.of(new User(rs.getString(1), rs.getString(2), null, null, null));
             }
         } catch(SQLException exc) {
             LOGGER.error("error running users query '" + sql + "' for username=" + username, exc);
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findUserByUsernameWithSalt(DataSource ds, String sql, String username) {
+        LOGGER.trace("findUserByUsernameWithSalt method has been called with sql= " + sql + "; username=" + username);
+        try (
+                var c = ds.getConnection();
+                var preparedStatement = c.prepareStatement(sql)
+        ) {
+            preparedStatement.setString(1, username);
+            var rs = preparedStatement.executeQuery();
+            if( rs.next() ) {
+                // query must have SELECT username, password_h
+                return Optional.of(new User(rs.getString(1), rs.getString(2), null, null, rs.getString(3)));
+            }
+        } catch(SQLException exc) {
+            LOGGER.error("error running users salt query '" + sql + "' for username=" + username, exc);
         }
         return Optional.empty();
     }
@@ -50,7 +69,7 @@ public class UserDAOImpl implements UserDAO {
         LOGGER.trace("findRolesByUsername method has been called with sql: " + sql + " and username: " + username);
         Set<Role> roles = new HashSet<>();
         try (
-                Connection c = ds.getConnection();
+                var c = ds.getConnection();
                 PreparedStatement preparedStatement = c.prepareStatement(sql)
         ) {
             preparedStatement.setString(1, username);
@@ -83,8 +102,8 @@ public class UserDAOImpl implements UserDAO {
             }
         } else {
             try (
-                    Connection c = ds.getConnection();
-                    PreparedStatement preparedStatement = c.prepareStatement(searchUsersSQL)
+                    var c = ds.getConnection();
+                    var preparedStatement = c.prepareStatement(searchUsersSQL)
             ) {
                 preparedStatement.setString(1, criteria);
                 preparedStatement.setString(2, criteria);
@@ -101,7 +120,7 @@ public class UserDAOImpl implements UserDAO {
         return users;
     }
 
-    void unpackResults(ResultSet rs, int first, int max, List<User> users) throws SQLException {
+    protected void unpackResults(ResultSet rs, int first, int max, List<User> users) throws SQLException {
         int pos = 0;
         while (rs.next() && pos < (first + max)) {
             if (pos >= first) {
@@ -111,7 +130,8 @@ public class UserDAOImpl implements UserDAO {
                                         rs.getString(1),
                                         rs.getString(2),
                                         rs.getString(3),
-                                        rs.getString(4)
+                                        rs.getString(4),
+                                        null
                                 )
                         );
             }
