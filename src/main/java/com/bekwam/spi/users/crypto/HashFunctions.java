@@ -59,30 +59,30 @@ public class HashFunctions {
         return DigestUtils.sha3_512(clearText.getBytes());
     }
 
-    public static byte[] pbkdf2_224(String clearText, byte[] salt, int nIterations, int keyLength) {
-        return doPBKDF2("PBKDF2WithHmacSHA224", clearText, salt, nIterations, keyLength);
+    public static byte[] pbkdf2_224(String clearText, byte[] salt, int nIterations, int keyLengthInBits) {
+        return doPBKDF2("PBKDF2WithHmacSHA224", clearText, salt, nIterations, keyLengthInBits);
     }
 
-    public static byte[] pbkdf2_256(String clearText, byte[] salt, int nIterations, int keyLength) {
-        return doPBKDF2("PBKDF2WithHmacSHA256", clearText, salt, nIterations, keyLength);
+    public static byte[] pbkdf2_256(String clearText, byte[] salt, int nIterations, int keyLengthInBits) {
+        return doPBKDF2("PBKDF2WithHmacSHA256", clearText, salt, nIterations, keyLengthInBits);
     }
 
-    public static byte[] pbkdf2_384(String clearText, byte[] salt, int nIterations, int keyLength) {
-        return doPBKDF2("PBKDF2WithHmacSHA384", clearText, salt, nIterations, keyLength);
+    public static byte[] pbkdf2_384(String clearText, byte[] salt, int nIterations, int keyLengthInBits) {
+        return doPBKDF2("PBKDF2WithHmacSHA384", clearText, salt, nIterations, keyLengthInBits);
     }
 
-    public static byte[] pbkdf2_512(String clearText, byte[] salt, int nIterations, int keyLength) {
-        return doPBKDF2("PBKDF2WithHmacSHA512", clearText, salt, nIterations, keyLength);
+    public static byte[] pbkdf2_512(String clearText, byte[] salt, int nIterations, int keyLengthInBits) {
+        return doPBKDF2("PBKDF2WithHmacSHA512", clearText, salt, nIterations, keyLengthInBits);
     }
 
-    protected static byte[] doPBKDF2(String algorithm, String clearText, byte[] salt, int nIterations, int keyLength) {
+    protected static byte[] doPBKDF2(String algorithm, String clearText, byte[] salt, int nIterations, int keyLengthInBits) {
         if( clearText == null || clearText.isEmpty()) {
             throw new IllegalArgumentException(algorithm + " clearText cannot be null or empty");
         }
         if( salt == null) {
             throw new IllegalArgumentException(algorithm + " salt cannot be null");
         }
-        var spec = new PBEKeySpec(clearText.toCharArray(), salt, nIterations, keyLength);
+        var spec = new PBEKeySpec(clearText.toCharArray(), salt, nIterations, keyLengthInBits);
         try {
             var skf = SecretKeyFactory.getInstance(algorithm);
             return skf.generateSecret(spec).getEncoded();
